@@ -9,7 +9,7 @@ from irc import *
 class Bot(object):
 	def __init__(self):
 		self._irc = IRC()
-		self._irc.send_message("Hello world, I am the bot!")
+		self._irc.send_message("JackBox Bot has successfully loaded!")
 
 		self._queue = []
 		self._queue_update_hooks = []
