@@ -4,15 +4,24 @@ import tkMessageBox
 import unicodedata
 
 from irc import *
+from bot_phrases import *
 
 
 class Bot(object):
 	def __init__(self):
 		self._irc = IRC()
-		self._irc.send_message("Hello world, I am the bot!")
+		self._irc.send_message("Hello")
 
 		self._queue = []
 		self._queue_update_hooks = []
+
+		#experimental phrases; this code is only temporary and will
+		#be replaced with a better system for loading them dynamically.
+		self._phrase_hooks = []
+
+		self._phrase_hooks.append(BotPhrasePraiseFromOwner())
+		self._phrase_hooks.append(BotPhraseLoveFromOwner())
+		self._phrase_hooks.append(BotPhraseAngerFromOwner())
 
 		self._last_reminder = None
 
@@ -42,6 +51,12 @@ class Bot(object):
 					else:
 						self._irc.send_message("/w " + sender + " You are already queued!")
 				else:
+					for hook in self._phrase_hooks:
+						result = hook.test_phrase(sender, message)
+						if result:
+							self._irc.send_message(result)
+							break
+
 					if self._last_reminder == None:
 						self._last_reminder = time.time()
 

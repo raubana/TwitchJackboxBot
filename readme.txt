@@ -11,11 +11,11 @@ Anyways, this project was intended as a way to guarantee people watching a
 Twitch stream, where the game is a Jackbox game, a chance to play. How it
 works is, while the bot is running, people in the Twitch chat can say "!play"
 to be added to the queue. When the streamer wants to start a new game, they'll
-have to make sure the people watching the stream can't see the code. The
+have to make sure the people watching the stream can't see the room code. The
 streamer then joins the room (since the first person to join a room becomes
 the host) and then types the room code into the textbox in this application.
-Pressing the "Setup Next Player" button will remove the person at the front of
-the line and will get the room code whispered to them.
+Pressing the "Setup Next Player" button will have the person at the front of
+the line removed and will get the room code whispered to them.
 
 Dylan J. Raub
 
@@ -24,5 +24,5 @@ Dylan J. Raub
 
  - I used python 2.7.8 for this project.
  - This hasn't been tested on any other OS besides Windows.
- - This project uses Tkinter for it's QUI.
+ - This project uses Tkinter for it's GUI.
  - This project cannot remove people from the queue (yet).

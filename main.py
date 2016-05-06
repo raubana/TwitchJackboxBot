@@ -18,6 +18,7 @@ class Application(Tkinter.Frame):
 
 		self.lbxQueue = Tkinter.Listbox(self, bg="black", fg="white", font=("Ariel Black", 16))
 		self.lbxQueue.pack(side=Tkinter.TOP, fill=Tkinter.BOTH, expand=1)
+		self.lbxQueue.insert(Tkinter.END, "LINE:")
 
 		self.bot.add_queue_update_hook(self.update_queue_widget)
 
@@ -26,6 +27,7 @@ class Application(Tkinter.Frame):
 
 	def update_queue_widget(self, new_queue):
 		self.lbxQueue.delete(0, Tkinter.END)
+		self.lbxQueue.insert(Tkinter.END, "LINE:")
 		for i in xrange(len(new_queue)):
 			self.lbxQueue.insert(Tkinter.END, str(i+1)+". "+str(new_queue[i]))
 

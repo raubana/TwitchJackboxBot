@@ -20,7 +20,7 @@ class IRC(object):
 		self._socket.connect((HOST, PORT))
 		self._socket.send("PASS {}\r\n".format(PASS).encode("utf-8"))
 		self._socket.send("NICK {}\r\n".format(NICK).encode("utf-8"))
-		self._socket.send("JOIN {}\r\n".format(CHAN).encode("utf-8"))
+		self._socket.send("JOIN #{}\r\n".format(CHAN).encode("utf-8"))
 
 		self._connected = True
 
@@ -73,7 +73,7 @@ class IRC(object):
 		if raw:
 			self._socket.send(msg)
 		else:
-			self._socket.send("PRIVMSG {} :{}\r\n".format(CHAN, msg))
+			self._socket.send("PRIVMSG {} :#{}\r\n".format(CHAN, msg))
 
 	def close(self):
 		self._connected = False
