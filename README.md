@@ -18,8 +18,6 @@ thread-safe this code actually is, so be careful and use at your own risk.
 4. Tell your chat to type **"!play"** to join the queue for the game(A reminder is sent out every 4 minutes).
 5. When you are ready to send out the room code make sure it's blocked so people who didn't queue don't see it and then press "Setup Next Player". 
  **>>NOTE<<** Its sends out the code one at a time so you will need to press it for each person in the queue.
-6. ???
-7. Profit.
 
 ## Other stuff
 Anyways, this project was intended as a way to guarantee people watching a
@@ -36,3 +34,4 @@ the line and will get the room code whispered to them.
 
  - This hasn't been tested on any other OS besides Windows.
  - This project cannot remove people from the queue (yet).
+ - This project does not automatically remove players who've left the chat (yet).
