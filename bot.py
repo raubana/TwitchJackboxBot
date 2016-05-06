@@ -35,6 +35,16 @@ class Bot(object):
 		for fnc in self._queue_update_hooks:
 			fnc(queue)
 
+	def __trigger_phase_hooks(self, sender, message):
+		for hook in self._phrase_hooks:
+			try:
+				result = hook.test_phrase(sender, message)
+				if result:
+					self._irc.send_message(result)
+					break
+			except:
+				pass
+
 	def __run(self):
 		while True:
 			time.sleep(0.1)
@@ -51,11 +61,7 @@ class Bot(object):
 					else:
 						self._irc.send_message("/w " + sender + " You are already queued!")
 				else:
-					for hook in self._phrase_hooks:
-						result = hook.test_phrase(sender, message)
-						if result:
-							self._irc.send_message(result)
-							break
+					self.__trigger_phase_hooks(sender, message)
 
 					if self._last_reminder == None:
 						self._last_reminder = time.time()
@@ -73,11 +79,20 @@ class Bot(object):
 			i += 1
 		return queue
 
+	def remove_from_queue(self, index):
+		if index >= 0 and index < len(self._queue):
+			self._queue.pop(index)
+			self.__trigger_queue_update_hooks()
+
 	def startPlayers(self, room):
 		if len(self._queue) == 0:
-			#tkMessageBox.showinfo("","There are not enough player's queued!")
+			tkMessageBox.showinfo("","There are not enough player's queued!")
 			pass
 		else:
+			#simple check that the room code is good.
+			if len(room) != 4 or not ROOM_PTN.match(room):
+				tkMessageBox.showinfo("","The room code isn't right.")
+
 			# Changing this min from 1 to x will change the number of players
 			# that will get removed from the queue.
 			i = min(1,len(self._queue))

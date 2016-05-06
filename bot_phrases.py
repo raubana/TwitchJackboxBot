@@ -18,7 +18,7 @@ class BotPhrase(object):
 class BotPhrasePraiseFromOwner(object):
 	def test_phrase(self, sender, message):
 		message = message.lower()
-		if sender == CHAN and NICK in message:
+		if sender == CHAN[1:] and NICK in message:
 			if "thank you" in message or "thanks" in message:
 				return random.choice(["no problem", ":3", "you're welcome"])
 			if "good work" in message or "good job" in message or "nice job" in message or "nice work" in message:
@@ -30,15 +30,16 @@ class BotPhrasePraiseFromOwner(object):
 class BotPhraseLoveFromOwner(object):
 	def test_phrase(self, sender, message):
 		message = message.lower()
-		if sender == CHAN and NICK in message:
+		if sender == CHAN[1:] and NICK in message:
 			if "love you" in message or "i love" in message:
 				return random.choice(["<3", ":3", "love u 2 bb", "#^u^#", "beep boop, does not compute ;)"])
-
+			if "best" in message:
+				return random.choice(["<3", ":3", "#^u^#", "Kappa"])
 
 class BotPhraseAngerFromOwner(object):
 	def test_phrase(self, sender, message):
 		message = message.lower()
-		if sender == CHAN and NICK in message:
+		if sender == CHAN[1:] and NICK in message:
 			if "darn it" in message or "dang it" in message or "damn it" in message or "dammit" in message:
 				return random.choice(["sorry ._.", "what I do??", ":< sorry"])
 			if ("sit" in message and ("corner" in message or "time out" in message or "timeout" in message)):
