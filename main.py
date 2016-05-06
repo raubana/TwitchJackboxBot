@@ -31,7 +31,7 @@ class Application(Tkinter.Frame):
 		self.btnRemovePlayer["command"] = self.removeSelectedPlayer
 		self.btnRemovePlayer.pack(side=Tkinter.RIGHT, padx=10, pady=10)
 
-		self.lblLine = Tkinter.Label(self, text="LINE:", bg="black", fg="white", font=("Ariel Black", 16), justify="LEFT")
+		self.lblLine = Tkinter.Label(self, text="LINE:", bg="black", fg="white", font=("Ariel Black", 16), anchor=Tkinter.W)
 		self.lblLine.pack(side=Tkinter.TOP, fill=Tkinter.X, ipadx=0, ipady=0, padx=0, pady=0)
 
 		self.lbxQueue = Tkinter.Listbox(self, borderwidth=0, bg="black", fg="white", font=("Ariel Black", 16), highlightthickness=0, relief="ridge")
