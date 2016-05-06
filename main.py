@@ -18,18 +18,29 @@ class Application(Tkinter.Frame):
 		self.txtInput["textvariable"] = self.room_contents
 		self.txtInput.pack(side=Tkinter.TOP, fill=Tkinter.X, padx=2, pady=2)
 
-		self.frmButtonFrame = Tkinter.Frame(self)
-		self.frmButtonFrame.pack(side=Tkinter.TOP, fill=Tkinter.X)
 
-		self.btnQueNextGame = Tkinter.Button(self.frmButtonFrame)
+		self.frmButtonFrame1 = Tkinter.Frame(self)
+		self.frmButtonFrame1.pack(side=Tkinter.TOP, fill=Tkinter.X)
+
+		self.btnQueNextGame = Tkinter.Button(self.frmButtonFrame1)
 		self.btnQueNextGame["text"] = "Next"
 		self.btnQueNextGame["command"] = self.startNextGame
-		self.btnQueNextGame.pack(side=Tkinter.LEFT, padx=10, pady=10)
+		self.btnQueNextGame.pack(side=Tkinter.LEFT, padx=5, pady=5)
 
-		self.btnRemovePlayer = Tkinter.Button(self.frmButtonFrame)
+		self.btnRemovePlayer = Tkinter.Button(self.frmButtonFrame1)
 		self.btnRemovePlayer["text"] = "Remove Selected"
 		self.btnRemovePlayer["command"] = self.removeSelectedPlayer
-		self.btnRemovePlayer.pack(side=Tkinter.RIGHT, padx=10, pady=10)
+		self.btnRemovePlayer.pack(side=Tkinter.RIGHT, padx=5, pady=5)
+
+
+		self.frmButtonFrame2 = Tkinter.Frame(self)
+		self.frmButtonFrame2.pack(side=Tkinter.TOP, fill=Tkinter.X)
+
+		self.btnBlacklistPlayer = Tkinter.Button(self.frmButtonFrame2)
+		self.btnBlacklistPlayer["text"] = "Blacklist Selected"
+		self.btnBlacklistPlayer["command"] = self.blacklistSelectedPlayer
+		self.btnBlacklistPlayer.pack(side=Tkinter.RIGHT, padx=5, pady=5)
+
 
 		self.lblLine = Tkinter.Label(self, text="LINE:", bg="black", fg="white", font=("Ariel Black", 16), anchor=Tkinter.W)
 		self.lblLine.pack(side=Tkinter.TOP, fill=Tkinter.X, ipadx=0, ipady=0, padx=0, pady=0)
@@ -48,6 +59,12 @@ class Application(Tkinter.Frame):
 		if len(selected_indexes) > 0:
 			index = selected_indexes[0]
 			self.bot.remove_from_queue(index)
+
+	def blacklistSelectedPlayer(self):
+		selected_indexes = self.lbxQueue.curselection()
+		if len(selected_indexes) > 0:
+			index = selected_indexes[0]
+			self.bot.blacklist_player(index)
 
 	def unselectAll(self, event):
 		print "lost focus"

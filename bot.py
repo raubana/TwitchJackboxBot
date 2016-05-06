@@ -15,6 +15,8 @@ class Bot(object):
 		self._queue = []
 		self._queue_update_hooks = []
 
+		self._blacklist = [] #TODO: Add ability to save and load this list.
+
 		#experimental phrases; this code is only temporary and will
 		#be replaced with a better system for loading them dynamically.
 		self._phrase_hooks = []
@@ -54,10 +56,13 @@ class Bot(object):
 				print "\""+sender+"\" : \""+message+"\""
 				if message == "!play":
 					if sender not in self._queue:
-						self._last_reminder = time.time()
-						self._queue.append(sender)
-						self._irc.send_message("/w " + sender + " You have been queued! You are #"+str(len(self._queue))+" in the line.")
-						self.__trigger_queue_update_hooks()
+						if sender in self._blacklist:
+							pass
+						else:
+							self._last_reminder = time.time()
+							self._queue.append(sender)
+							self._irc.send_message("/w " + sender + " You have been queued! You are #"+str(len(self._queue))+" in the line.")
+							self.__trigger_queue_update_hooks()
 					else:
 						self._irc.send_message("/w " + sender + " You are already queued!")
 				else:
@@ -84,6 +89,14 @@ class Bot(object):
 			self._queue.pop(index)
 			self.__trigger_queue_update_hooks()
 
+	def blacklist_player(self, index):
+		if index >= 0 and index < len(self._queue):
+			name = self._queue[index]
+			self._irc.send_message(name + " has been blacklisted. They were naughty Kappa")
+			self._irc.send_message("/w " + name + " You were blacklisted, come back another day when you're feeling more cooperative :/")
+			self._blacklist.append(name)
+			self.remove_from_queue(index)
+
 	def startPlayers(self, room):
 		if len(self._queue) == 0:
 			tkMessageBox.showinfo("","There are not enough player's queued!")
@@ -100,5 +113,5 @@ class Bot(object):
 			while i > 0:
 				i -= 1
 				player = self._queue.pop(0)
-				self._irc.send_message("/w "+player+" Time to play! The room code is "+room+".")
+				self._irc.send_message("/w "+player+" Time to play! The room code is \""+room+"\". Go to http://jackbox.tv/ and type this code into the textbox to join this match.")
 			self.__trigger_queue_update_hooks()
