@@ -14,8 +14,8 @@ to be added to the queue. When the streamer wants to start a new game, they'll
 have to make sure the people watching the stream can't see the room code. The
 streamer then joins the room (since the first person to join a room becomes
 the host) and then types the room code into the textbox in this application.
-Pressing the "Next" button will have the person at the front of the line
-removed and will get the room code whispered to them.
+Pressing the "Next" button will have X people at the front of the line removed
+and will get the room code whispered to them (X being set by the slider).
 
 Dylan J. Raub
 

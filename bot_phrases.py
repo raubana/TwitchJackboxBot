@@ -1,4 +1,4 @@
-import random
+import random, time
 from cfg import CHAN, NICK
 
 
@@ -15,19 +15,45 @@ class BotPhrase(object):
 		return None
 
 
-class BotPhrasePraiseFromOwner(object):
+class BotPhraseGreeting(BotPhrase):
+	def __init__(self):
+		super(BotPhraseGreeting, self).__init__()
+		self.people_already_greeted = {}
+
 	def test_phrase(self, sender, message):
-		message = message.lower()
-		if sender == CHAN[1:] and NICK in message:
-			if "thank you" in message or "thanks" in message:
-				return random.choice(["no problem", ":3", "you're welcome"])
-			if "good work" in message or "good job" in message or "nice job" in message or "nice work" in message:
-				return random.choice(["<3", ":3", "thank you ^u^", "Thanks :D"])
-			if "good bot" in message:
-				return random.choice(["<3 <3 <3", "/me beams proudly", "^u^", "Thanks :D"])
+		t = time.time()
+		if sender not in self.people_already_greeted or t - self.people_already_greeted[sender] > 300:
+			message = message.lower()
+			if "hello" in message or "hey" in message or "sup" in message or "hi" in message or "salutation" in message or "greeting" in message or "hoi" in message:
+				return random.choice(["Hi, "+sender, "Hello!", "Welcome :3", "Greetings, "+sender, "Hi there", "Sup"])
+
+		self.people_already_greeted[sender] = t
 
 
-class BotPhraseLoveFromOwner(object):
+class BotPhrasePraise(BotPhrase):
+	def __init__(self):
+		super(BotPhrasePraise, self).__init__()
+		self.last_response = 0
+
+	def test_phrase(self, sender, message):
+		t = time.time()
+		if t - self.last_response > 30:
+			message = message.lower()
+			if NICK in message:
+				output = None
+				if "thank you" in message or "thanks" in message:
+					output = random.choice(["no problem", ":3", "you're welcome"])
+				elif "good work" in message or "good job" in message or "nice job" in message or "nice work" in message:
+					output = random.choice(["<3", ":3", "thank you ^u^", "Thanks :D"])
+				elif "good bot" in message:
+					output = random.choice(["<3 <3 <3", "/me beams proudly", "^u^", "Thanks :D"])
+				if output != None:
+					self.last_response = t
+					return output
+
+
+
+class BotPhraseLoveFromOwner(BotPhrase):
 	def test_phrase(self, sender, message):
 		message = message.lower()
 		if sender == CHAN[1:] and NICK in message:
@@ -36,7 +62,7 @@ class BotPhraseLoveFromOwner(object):
 			if "best" in message:
 				return random.choice(["<3", ":3", "#^u^#", "Kappa"])
 
-class BotPhraseAngerFromOwner(object):
+class BotPhraseAngerFromOwner(BotPhrase):
 	def test_phrase(self, sender, message):
 		message = message.lower()
 		if sender == CHAN[1:] and NICK in message:

@@ -21,7 +21,8 @@ class Bot(object):
 		#be replaced with a better system for loading them dynamically.
 		self._phrase_hooks = []
 
-		self._phrase_hooks.append(BotPhrasePraiseFromOwner())
+		self._phrase_hooks.append(BotPhraseGreeting())
+		self._phrase_hooks.append(BotPhrasePraise())
 		self._phrase_hooks.append(BotPhraseLoveFromOwner())
 		self._phrase_hooks.append(BotPhraseAngerFromOwner())
 
@@ -86,8 +87,11 @@ class Bot(object):
 
 	def remove_from_queue(self, index):
 		if index >= 0 and index < len(self._queue):
-			self._queue.pop(index)
+			name = self._queue.pop(index)
 			self.__trigger_queue_update_hooks()
+			return 1, name + " has been removed from the queue."
+		else:
+			return -1, "Not a valid index."
 
 	def blacklist_player(self, index):
 		if index >= 0 and index < len(self._queue):
@@ -96,22 +100,24 @@ class Bot(object):
 			self._irc.send_message("/w " + name + " You were blacklisted, come back another day when you're feeling more cooperative :/")
 			self._blacklist.append(name)
 			self.remove_from_queue(index)
+			return 1, name + " has been blacklisted."
+		else:
+			return -1, "Not a valid index."
 
-	def startPlayers(self, room):
+	def startPlayers(self, room, count=1):
 		if len(self._queue) == 0:
-			tkMessageBox.showinfo("","There are not enough player's queued!")
-			pass
+			return -1, "There are not enough players queued!"
 		else:
 			#simple check that the room code is good.
 			if len(room) != 4 or not ROOM_PTN.match(room):
-				tkMessageBox.showinfo("","The room code isn't right.")
+				return -1, "The room code isn't right."
 
-			# Changing this min from 1 to x will change the number of players
-			# that will get removed from the queue.
-			i = min(1,len(self._queue))
-			#tkMessageBox.showinfo("","Queuing "+str(i)+ " players!")
+			i = min(count,len(self._queue))
+			j = i
 			while i > 0:
 				i -= 1
 				player = self._queue.pop(0)
 				self._irc.send_message("/w "+player+" Time to play! The room code is \""+room+"\". Go to http://jackbox.tv/ and type this code into the textbox to join this match.")
 			self.__trigger_queue_update_hooks()
+
+			return 1, "Setup "+str(j)+" players!"

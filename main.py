@@ -36,6 +36,9 @@ class Application(Tkinter.Frame):
 		self.frmButtonFrame2 = Tkinter.Frame(self)
 		self.frmButtonFrame2.pack(side=Tkinter.TOP, fill=Tkinter.X)
 
+		self.sclNumberOfPlayers = Tkinter.Scale(self.frmButtonFrame2, from_=1, to=8, orient=Tkinter.HORIZONTAL)
+		self.sclNumberOfPlayers.pack(side=Tkinter.LEFT, padx=5, pady=5)
+
 		self.btnBlacklistPlayer = Tkinter.Button(self.frmButtonFrame2)
 		self.btnBlacklistPlayer["text"] = "Blacklist Selected"
 		self.btnBlacklistPlayer["command"] = self.blacklistSelectedPlayer
@@ -49,22 +52,41 @@ class Application(Tkinter.Frame):
 		self.lbxQueue.pack(side=Tkinter.TOP, fill=Tkinter.BOTH, expand = 1, ipadx=0, ipady=0, padx=0, pady=0)
 		self.lbxQueue.bind("<FocusOut>", self.unselectAll)
 
+		self.lblInfo = Tkinter.Label(self, text="", anchor=Tkinter.W)
+		self.lblInfo.pack(side=Tkinter.TOP, fill=Tkinter.X, ipadx=0, ipady=0, padx=0, pady=0)
+
 		self.bot.add_queue_update_hook(self.update_queue_widget)
 
+	def set_info(self, code, message):
+		if code < 0:
+			self.lblInfo.config(fg="darkred")
+		elif code == 1:
+			self.lblInfo.config(fg="darkblue")
+		else:
+			self.lblInfo.config(fg="black")
+		self.lblInfo.config(text=message)
+
 	def startNextGame(self):
-		self.bot.startPlayers(self.room_contents.get())
+		code, message = self.bot.startPlayers(self.room_contents.get(), self.sclNumberOfPlayers.get())
+		self.set_info(code, message)
 
 	def removeSelectedPlayer(self):
 		selected_indexes = self.lbxQueue.curselection()
 		if len(selected_indexes) > 0:
 			index = selected_indexes[0]
-			self.bot.remove_from_queue(index)
+			code, message = self.bot.remove_from_queue(index)
+			self.set_info(code, message)
+		else:
+			self.set_info(-1, "No player was selected.")
 
 	def blacklistSelectedPlayer(self):
 		selected_indexes = self.lbxQueue.curselection()
 		if len(selected_indexes) > 0:
 			index = selected_indexes[0]
-			self.bot.blacklist_player(index)
+			code, message = self.bot.blacklist_player(index)
+			self.set_info(code, message)
+		else:
+			self.set_info(-1, "No player was selected.")
 
 	def unselectAll(self, event):
 		print "lost focus"
